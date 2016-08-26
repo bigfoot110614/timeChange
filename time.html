@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>timeChange</title>
+    <style>
+        *{
+            padding: 0;
+            margin: 0;
+            font-size: 20px;
+            outline: none;
+        }
+        #table{
+            width: 500px;
+            margin: 50px auto;
+            vertical-align:middle;
+            height: 500px;
+        }
+        #in{
+            padding: 10px;
+        }
+        button{
+            background: limegreen;
+            border: 2px solid lightgray;
+            margin:20px 8px;
+            cursor: pointer;
+            box-shadow: 3px 3px 3px grey;
+            -webkit-border-radius: 3px;
+            -moz-border-radius: 3px;
+            border-radius: 3px; ;
+        }
+        #out{
+            padding:10px;
+        }
+        p{
+            line-height: 40px;
+            color: deeppink;
+        }
+    </style>
+</head>
+<body>
+<div id="table">
+    <p>Unix时间戳（Unix timestamp）</p>
+    <textarea id="in" cols="30" rows="10"></textarea>
+    <select id="list">
+        <option value="mili">毫秒</option>
+        <option value="second">秒</option>
+    </select>
+    <button id="btn">Unix转化成北京时间</button>
+    <button id="BJtoUnix">北京时间转化成Unix</button>
+    <textarea id="out" cols="30" rows="10"></textarea>
+</div>
+<div id="inner">
+
+</div>
+<script>
+    var list=document.getElementById('list');
+    var Out=document.getElementById('out');
+    btn.onclick=function(e){
+        Out.value=null;
+        var In=document.getElementById('in');
+        var InValue=In.value;
+        if(InValue){
+            console.log(InValue);
+            InValue=InValue.replace(/\/r\/n|(\s)+/g,',').split(',');
+            console.log(InValue);
+            var outInner=[];
+            InValue.forEach(function (item,index) {
+                if(Number(item)){
+                    if(list.value=='mili'){
+                        var unixTimestamp = new Date(parseInt(item));
+                    }else {
+                        var unixTimestamp = new Date(parseInt(item)*1000);
+                    }
+                    commonTime=formatDate(unixTimestamp);
+                    outInner.push(commonTime);
+                }
+            });
+            Out.value=outInner.join('\r');
+        }
+    }
+    BJtoUnix.onclick= function (e) {
+        var In=document.getElementById('in');
+        if(Out.value){
+            var OutValue=Out.value.replace(/\n/g,',').split(',');
+            var Inner=[];
+            OutValue.forEach(function (item,index) {
+                var tem=item.split(/(-|:|\s)/g);
+                tem=tem.filter(function(item){
+                    return Number(item);
+                });
+                console.log(tem[0],typeof Number(tem[0]));
+//                var timestamp2=Date.parse(new Date(''+parseInt(item)));
+                //var commonTime = new Date(Date.UTC(year, month - 1, day, hour, minute, second))
+                var timestamp2 = Date.UTC(Number(tem[0]),Number(tem[1])-1,Number(tem[2]),Number(tem[3])-8,Number(tem[4]),Number(tem[5]));//这个参数能不能以数组的形式传
+                console.log(timestamp2);
+                if(list.value=='second'){
+                    timestamp2 = timestamp2 / 1000;
+                }
+                Inner.push(timestamp2);
+                console.log(Inner);
+            });
+            In.value=Inner.join('\r');
+        }
+    }
+    function formatDate(now) {
+        var year=now.getFullYear();
+        var month=now.getMonth()+1;
+        var date=now.getDate();
+        var hour=now.getHours();
+        var minute=now.getMinutes();
+        minute=(minute>9?minute:'0'+minute);
+        var second=now.getSeconds();
+        second=(second>9?second:'0'+second);
+        return year+"-"+month+"-"+date+" "+hour+":"+minute+":"+second;
+    }
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
